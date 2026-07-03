@@ -5,6 +5,7 @@ node_modules/
 # env
 .env
 .env.*
+!.env.example
 
 # logs
 logs/
@@ -16,6 +17,3 @@ logs/
 # IDE
 .idea/
 .vscode/
-
-# amoCRM keys
-amo_token.json
