@@ -5,9 +5,10 @@ import { AmoModule } from '../amo/amo.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AccountRepository } from './account.repository';
 import { AccountService } from './account.service';
+import { CustomFieldModule } from '../custom-field/custom-field.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Account]), AmoModule, JwtModule],
+    imports: [TypeOrmModule.forFeature([Account]), AmoModule, JwtModule, CustomFieldModule],
     providers: [AccountRepository, AccountService],
     exports: [AccountService],
 })

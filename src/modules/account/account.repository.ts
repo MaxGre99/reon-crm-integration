@@ -24,4 +24,8 @@ export class AccountRepository {
     public async findAllInstalled(): Promise<Account[]> {
         return this.repository.findBy({ isInstalled: true });
     }
+
+    public async findByAccountId(accountId: number): Promise<Account | null> {
+        return this.repository.findOneBy({ accountId });
+    }
 }

@@ -7,6 +7,7 @@ import { Account } from '../modules/account/account.entity';
 import { WidgetModule } from '../modules/widget/widget.module';
 import { appSchema } from './app.schema';
 import type { AppConfig } from './app.types';
+import { CustomField } from '../modules/custom-field/custom-field.entity';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import type { AppConfig } from './app.types';
                 username: configService.get(Env.DbUser),
                 password: configService.get(Env.DbPassword),
                 database: configService.get(Env.DbName),
-                entities: [Account],
+                entities: [Account, CustomField],
                 synchronize: true,
             }),
         }),
