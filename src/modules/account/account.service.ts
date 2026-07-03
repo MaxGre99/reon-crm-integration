@@ -42,12 +42,12 @@ export class AccountService {
                 continue;
             }
 
-            await this.amoService
-                .refreshToken(account.refreshToken, account.subdomain)
-                .then((token) =>
-                    this.accountRepository.upsert(account.accountId, account.subdomain, token.access_token, token.refresh_token)
-                )
-                .catch((error: unknown) => this.logger.error(`Failed to refresh token for account ${account.accountId}`, error));
+            try {
+                const token = await this.amoService.refreshToken(account.refreshToken, account.subdomain);
+                await this.accountRepository.upsert(account.accountId, account.subdomain, token.access_token, token.refresh_token);
+            } catch (error: unknown) {
+                this.logger.error(`Failed to refresh token for account ${account.accountId}`, error);
+            }
         }
     }
 }
