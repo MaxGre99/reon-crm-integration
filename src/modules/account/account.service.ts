@@ -4,6 +4,7 @@ import { AmoService } from '../amo/amo.service';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CustomFieldService } from '../custom-field/custom-field.service';
+import { WebhookService } from '../webhook/webhook.service';
 
 type AmoJwtPayload = {
     account_id: number;
@@ -17,7 +18,8 @@ export class AccountService {
         private readonly accountRepository: AccountRepository,
         private readonly amoService: AmoService,
         private readonly jwtService: JwtService,
-        private readonly customFieldService: CustomFieldService
+        private readonly customFieldService: CustomFieldService,
+        private readonly webhookService: WebhookService
     ) {}
 
     public async install(code: string, subdomain: string): Promise<void> {
@@ -36,6 +38,7 @@ export class AccountService {
         }
 
         await this.customFieldService.setup(account, token.access_token);
+        await this.webhookService.setup(account, token.access_token);
     }
 
     public async remove(accountId: number): Promise<void> {
