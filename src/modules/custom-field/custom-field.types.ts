@@ -1,4 +1,4 @@
-import { AmoCustomFieldType } from '../amo/amo.types';
+import type { AmoCustomFieldType } from '../amo/amo.types';
 
 export type CustomFieldData = {
     fieldId: number;

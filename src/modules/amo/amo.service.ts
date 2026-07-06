@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import type { AmoCustomField, AmoToken, AmoCustomFieldsResponse, AmoEntityType, AmoCustomFieldType } from './amo.types';
+import type { AmoCustomField, AmoToken, AmoCustomFieldsResponse, AmoEntityType, AmoCustomFieldType, AmoCustomFieldEnum } from './amo.types';
 import { firstValueFrom } from 'rxjs';
 import { Env } from '../../shared/enums/env.enum';
 import type { AppConfig } from '../../app/app.types';
@@ -57,25 +57,33 @@ export class AmoService {
         subdomain: string,
         entityType: AmoEntityType,
         name: string,
-        fieldType: AmoCustomFieldType
+        fieldType: AmoCustomFieldType,
+        enums?: AmoCustomFieldEnum[]
     ): Promise<AmoCustomField> {
         const { data } = await firstValueFrom(
             this.httpService.post<AmoCustomFieldsResponse>(
                 `https://${subdomain}.amocrm.ru/api/v4/${entityType}/custom_fields`,
-                [
-                    {
-                        name,
-                        type: fieldType,
-                    },
-                ],
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                }
+                [{ name, type: fieldType, ...(enums ? { enums } : {}) }],
+                { headers: { Authorization: `Bearer ${accessToken}` } }
             )
         );
 
         return data._embedded.custom_fields[0];
+    }
+
+    public async updateCustomFieldEnums(
+        accessToken: string,
+        subdomain: string,
+        entityType: AmoEntityType,
+        fieldId: number,
+        enums: AmoCustomFieldEnum[]
+    ): Promise<void> {
+        await firstValueFrom(
+            this.httpService.patch(
+                `https://${subdomain}.amocrm.ru/api/v4/${entityType}/custom_fields/${fieldId}`,
+                { enums },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
     }
 }

@@ -7,10 +7,17 @@ export type AmoToken = {
     refresh_token: string;
 };
 
+export type AmoCustomFieldEnum = {
+    id?: number;
+    value: string;
+    sort: number;
+};
+
 export type AmoCustomField = {
     id: number;
     name: string;
     type: string;
+    enums?: AmoCustomFieldEnum[];
 };
 
 export type AmoCustomFieldsResponse = {

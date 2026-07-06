@@ -25,3 +25,11 @@ export const REQUIRED_CONTACT_CUSTOM_FIELDS = [
 ];
 
 export const REQUIRED_DEAL_CUSTOM_FIELDS = [{ name: DealCustomFieldNames.Services, type: AmoCustomFieldTypes.Multiselect }];
+
+export const REQUIRED_SERVICE_ENUM_VALUES = [
+    ContactCustomFieldNames.FaceLaserRejuvenation,
+    ContactCustomFieldNames.UltrasonicLifting,
+    ContactCustomFieldNames.VascularLaserRemoval,
+    ContactCustomFieldNames.MimicWrinkleCorrection,
+    ContactCustomFieldNames.LaserEpilation,
+];
