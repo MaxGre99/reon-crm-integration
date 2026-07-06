@@ -3,6 +3,7 @@ import { AccountRepository } from './account.repository';
 import { AmoService } from '../amo/amo.service';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { CustomFieldService } from '../custom-field/custom-field.service';
 
 type AmoJwtPayload = {
     account_id: number;
@@ -15,7 +16,8 @@ export class AccountService {
     constructor(
         private readonly accountRepository: AccountRepository,
         private readonly amoService: AmoService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly customFieldService: CustomFieldService
     ) {}
 
     public async install(code: string, subdomain: string): Promise<void> {
@@ -27,6 +29,13 @@ export class AccountService {
         }
 
         await this.accountRepository.upsert(payload.account_id, subdomain, token.access_token, token.refresh_token);
+
+        const account = await this.accountRepository.findByAccountId(payload.account_id);
+        if (!account) {
+            throw new Error('Account not found after upsert');
+        }
+
+        await this.customFieldService.setup(account, token.access_token);
     }
 
     public async remove(accountId: number): Promise<void> {
