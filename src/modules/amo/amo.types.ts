@@ -1,4 +1,4 @@
-import { AmoCustomFieldTypes, AmoEntityTypes } from './amo.consts';
+import { AmoCustomFieldTypes, AmoEntityTypes, AmoWebhookEvents } from './amo.consts';
 
 export type AmoToken = {
     token_type: string;
@@ -26,5 +26,18 @@ export type AmoCustomFieldsResponse = {
     };
 };
 
+export type AmoWebhook = {
+    id: number;
+    destination: string;
+    settings: string[];
+};
+
+export type AmoWebhooksResponse = {
+    _embedded: {
+        webhooks: AmoWebhook[];
+    };
+};
+
 export type AmoEntityType = (typeof AmoEntityTypes)[keyof typeof AmoEntityTypes];
 export type AmoCustomFieldType = (typeof AmoCustomFieldTypes)[keyof typeof AmoCustomFieldTypes];
+export type AmoWebhookEvent = (typeof AmoWebhookEvents)[keyof typeof AmoWebhookEvents];

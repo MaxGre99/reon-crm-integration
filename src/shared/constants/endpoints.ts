@@ -4,4 +4,9 @@ export const Endpoints = {
         Install: 'install',
         Remove: 'remove',
     },
+    Webhook: {
+        Base: 'webhooks',
+        Contacts: 'contacts',
+        Leads: 'leads',
+    },
 };

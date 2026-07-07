@@ -1,7 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import type { AmoCustomField, AmoToken, AmoCustomFieldsResponse, AmoEntityType, AmoCustomFieldType, AmoCustomFieldEnum } from './amo.types';
+import type {
+    AmoCustomField,
+    AmoToken,
+    AmoCustomFieldsResponse,
+    AmoEntityType,
+    AmoCustomFieldType,
+    AmoCustomFieldEnum,
+    AmoWebhooksResponse,
+    AmoWebhook,
+    AmoWebhookEvent,
+} from './amo.types';
 import { firstValueFrom } from 'rxjs';
 import { Env } from '../../shared/enums/env.enum';
 import type { AppConfig } from '../../app/app.types';
@@ -82,6 +92,26 @@ export class AmoService {
             this.httpService.patch(
                 `https://${subdomain}.amocrm.ru/api/v4/${entityType}/custom_fields/${fieldId}`,
                 { enums },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+    }
+
+    public async getWebhooks(accessToken: string, subdomain: string): Promise<AmoWebhook[]> {
+        const { data } = await firstValueFrom(
+            this.httpService.get<AmoWebhooksResponse>(`https://${subdomain}.amocrm.ru/api/v4/webhooks`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+        );
+
+        return data?._embedded?.webhooks ?? [];
+    }
+
+    public async subscribeWebhook(accessToken: string, subdomain: string, destination: string, settings: AmoWebhookEvent[]): Promise<void> {
+        await firstValueFrom(
+            this.httpService.post(
+                `https://${subdomain}.amocrm.ru/api/v4/webhooks`,
+                { destination, settings },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             )
         );
