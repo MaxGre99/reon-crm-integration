@@ -3,12 +3,6 @@ import { Endpoints } from '../../shared/constants/endpoints';
 
 @Controller(Endpoints.Webhook.Base)
 export class WebhookController {
-    @Post(Endpoints.Webhook.Contacts)
-    @HttpCode(HttpStatus.OK)
-    public handleContacts(): void {
-        return;
-    }
-
     @Post(Endpoints.Webhook.Leads)
     @HttpCode(HttpStatus.OK)
     public handleLeads(): void {

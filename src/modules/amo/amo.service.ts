@@ -11,6 +11,7 @@ import type {
     AmoWebhooksResponse,
     AmoWebhook,
     AmoWebhookEvent,
+    AmoContact,
 } from './amo.types';
 import { firstValueFrom } from 'rxjs';
 import { Env } from '../../shared/enums/env.enum';
@@ -112,6 +113,32 @@ export class AmoService {
             this.httpService.post(
                 `https://${subdomain}.amocrm.ru/api/v4/webhooks`,
                 { destination, settings },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+    }
+
+    public async getContact(accessToken: string, subdomain: string, contactId: number): Promise<AmoContact> {
+        const { data } = await firstValueFrom(
+            this.httpService.get<AmoContact>(`https://${subdomain}.amocrm.ru/api/v4/contacts/${contactId}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+        );
+
+        return data;
+    }
+
+    public async updateContactCustomField(
+        accessToken: string,
+        subdomain: string,
+        contactId: number,
+        fieldId: number,
+        value: string | number
+    ): Promise<void> {
+        await firstValueFrom(
+            this.httpService.patch(
+                `https://${subdomain}.amocrm.ru/api/v4/contacts/${contactId}`,
+                { custom_fields_values: [{ field_id: fieldId, values: [{ value }] }] },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             )
         );

@@ -28,4 +28,8 @@ export class AccountRepository {
     public async findByAccountId(accountId: number): Promise<Account | null> {
         return this.repository.findOneBy({ accountId });
     }
+
+    public async findBySubdomain(subdomain: string): Promise<Account | null> {
+        return this.repository.findOneBy({ subdomain });
+    }
 }
