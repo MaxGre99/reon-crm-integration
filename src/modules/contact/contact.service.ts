@@ -26,15 +26,15 @@ export class ContactService {
         }
     }
 
-    public async processAge(account: Account, contactId: number): Promise<void> {
+    public async processAge(account: Account, contactId: number): Promise<number | null> {
         if (!account.accessToken) {
-            return;
+            return null;
         }
 
         const birthdayFieldId = await this.customFieldService.getFieldId(account, ContactCustomFieldNames.Birthday);
         const ageFieldId = await this.customFieldService.getFieldId(account, ContactCustomFieldNames.Age);
         if (birthdayFieldId === null || ageFieldId === null) {
-            return;
+            return null;
         }
 
         const contact = await this.amoService.getContact(account.accessToken, account.subdomain, contactId);
@@ -42,17 +42,19 @@ export class ContactService {
 
         const birthdayValue = fieldValues.find((field) => field.field_id === birthdayFieldId)?.values[0]?.value;
         if (birthdayValue === undefined) {
-            return;
+            return null;
         }
 
         const age = this.calculateAge(Number(birthdayValue));
 
         const currentAgeValue = fieldValues.find((field) => field.field_id === ageFieldId)?.values[0]?.value;
         if (currentAgeValue !== undefined && Number(currentAgeValue) === age) {
-            return;
+            return age;
         }
 
         await this.amoService.updateContactCustomField(account.accessToken, account.subdomain, contactId, ageFieldId, age);
+
+        return age;
     }
 
     private calculateAge(birthTimestamp: number): number {

@@ -9,6 +9,7 @@ import { appSchema } from './app.schema';
 import type { AppConfig } from './app.types';
 import { CustomField } from '../modules/custom-field/custom-field.entity';
 import { ContactModule } from '../modules/contact/contact.module';
+import { DealModule } from '../modules/deal/deal.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { ContactModule } from '../modules/contact/contact.module';
         }),
         WidgetModule,
         ContactModule,
+        DealModule,
     ],
 })
 export class AppModule {}
