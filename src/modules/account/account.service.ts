@@ -64,7 +64,7 @@ export class AccountService {
         }
     }
 
-    public async getBySubdomain(subdomain: string): Promise<Account | null> {
-        return this.accountRepository.findBySubdomain(subdomain);
+    public async getByAccountId(accountId: number): Promise<Account | null> {
+        return this.accountRepository.findByAccountId(accountId);
     }
 }

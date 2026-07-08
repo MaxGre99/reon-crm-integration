@@ -4,7 +4,7 @@ export type ContactWebhookEntity = {
 
 export type ContactWebhookPayload = {
     account: {
-        subdomain: string;
+        id: string;
     };
     contacts?: {
         add?: ContactWebhookEntity[];

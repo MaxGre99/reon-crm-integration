@@ -15,7 +15,7 @@ export class ContactService {
     ) {}
 
     public async handleWebhook(payload: ContactWebhookPayload): Promise<void> {
-        const account = await this.accountService.getBySubdomain(payload.account.subdomain);
+        const account = await this.accountService.getByAccountId(Number(payload.account.id));
         if (!account || !account.accessToken) {
             return;
         }
