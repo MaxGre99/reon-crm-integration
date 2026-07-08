@@ -20,6 +20,13 @@ export type AmoCustomField = {
     enums?: AmoCustomFieldEnum[];
 };
 
+export type AmoCustomFieldValue = {
+    field_id: number;
+    field_name?: string;
+    field_type?: string;
+    values: { value: string | number }[];
+};
+
 export type AmoCustomFieldsResponse = {
     _embedded: {
         custom_fields: AmoCustomField[];
@@ -36,6 +43,12 @@ export type AmoWebhooksResponse = {
     _embedded: {
         webhooks: AmoWebhook[];
     };
+};
+
+export type AmoContact = {
+    id: number;
+    name?: string;
+    custom_fields_values: AmoCustomFieldValue[] | null;
 };
 
 export type AmoEntityType = (typeof AmoEntityTypes)[keyof typeof AmoEntityTypes];

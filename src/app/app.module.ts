@@ -8,6 +8,7 @@ import { WidgetModule } from '../modules/widget/widget.module';
 import { appSchema } from './app.schema';
 import type { AppConfig } from './app.types';
 import { CustomField } from '../modules/custom-field/custom-field.entity';
+import { ContactModule } from '../modules/contact/contact.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { CustomField } from '../modules/custom-field/custom-field.entity';
             }),
         }),
         WidgetModule,
+        ContactModule,
     ],
 })
 export class AppModule {}

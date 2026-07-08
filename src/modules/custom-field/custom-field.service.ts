@@ -82,4 +82,9 @@ export class CustomFieldService {
 
         await this.amoService.updateCustomFieldEnums(accessToken, subdomain, entityType, field.id, updatedEnums);
     }
+
+    public async getFieldId(account: Account, fieldName: string): Promise<number | null> {
+        const field = await this.customFieldRepository.findByName(account, fieldName);
+        return field?.fieldId ?? null;
+    }
 }

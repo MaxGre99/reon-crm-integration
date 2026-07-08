@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CustomFieldService } from '../custom-field/custom-field.service';
 import { WebhookService } from '../webhook/webhook.service';
+import type { Account } from './account.entity';
 
 type AmoJwtPayload = {
     account_id: number;
@@ -61,5 +62,9 @@ export class AccountService {
                 this.logger.error(`Failed to refresh token for account ${account.accountId}`, error);
             }
         }
+    }
+
+    public async getByAccountId(accountId: number): Promise<Account | null> {
+        return this.accountRepository.findByAccountId(accountId);
     }
 }
