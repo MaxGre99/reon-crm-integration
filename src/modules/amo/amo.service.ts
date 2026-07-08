@@ -12,10 +12,14 @@ import type {
     AmoWebhook,
     AmoWebhookEvent,
     AmoContact,
+    AmoLead,
+    AmoTask,
+    AmoTasksResponse,
 } from './amo.types';
 import { firstValueFrom } from 'rxjs';
 import { Env } from '../../shared/enums/env.enum';
 import type { AppConfig } from '../../app/app.types';
+import { AmoEntityTypes } from './amo.consts';
 
 @Injectable()
 export class AmoService {
@@ -139,6 +143,64 @@ export class AmoService {
             this.httpService.patch(
                 `https://${subdomain}.amocrm.ru/api/v4/contacts/${contactId}`,
                 { custom_fields_values: [{ field_id: fieldId, values: [{ value }] }] },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+    }
+
+    public async getLead(accessToken: string, subdomain: string, leadId: number): Promise<AmoLead> {
+        const { data } = await firstValueFrom(
+            this.httpService.get<AmoLead>(`https://${subdomain}.amocrm.ru/api/v4/leads/${leadId}?with=contacts`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+        );
+
+        return data;
+    }
+
+    public async updateLeadPrice(accessToken: string, subdomain: string, leadId: number, price: number): Promise<void> {
+        await firstValueFrom(
+            this.httpService.patch(
+                `https://${subdomain}.amocrm.ru/api/v4/leads/${leadId}`,
+                { price },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+    }
+
+    public async getLeadTasks(accessToken: string, subdomain: string, leadId: number): Promise<AmoTask[]> {
+        const { data } = await firstValueFrom(
+            this.httpService.get<AmoTasksResponse>(
+                `https://${subdomain}.amocrm.ru/api/v4/tasks?filter[entity_type]=leads&filter[entity_id]=${leadId}`,
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+
+        return data?._embedded?.tasks ?? [];
+    }
+
+    public async createTask(
+        accessToken: string,
+        subdomain: string,
+        leadId: number,
+        taskTypeId: number,
+        text: string,
+        completeTill: number
+    ): Promise<void> {
+        await firstValueFrom(
+            this.httpService.post(
+                `https://${subdomain}.amocrm.ru/api/v4/tasks`,
+                [{ task_type_id: taskTypeId, text, complete_till: completeTill, entity_id: leadId, entity_type: AmoEntityTypes.Leads }],
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+        );
+    }
+
+    public async updateTask(accessToken: string, subdomain: string, taskId: number, text: string, completeTill: number): Promise<void> {
+        await firstValueFrom(
+            this.httpService.patch(
+                `https://${subdomain}.amocrm.ru/api/v4/tasks/${taskId}`,
+                { text, complete_till: completeTill },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             )
         );
